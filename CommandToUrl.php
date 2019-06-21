@@ -12,6 +12,8 @@
 
 namespace CommandToUrl;
 
+use Propel\Runtime\Connection\ConnectionInterface;
+use Thelia\Install\Database;
 use Thelia\Module\BaseModule;
 
 class CommandToUrl extends BaseModule
@@ -25,4 +27,17 @@ class CommandToUrl extends BaseModule
      *
      * Have fun !
      */
+
+
+    /**
+     * @param ConnectionInterface $con
+     */
+    public function postActivation(ConnectionInterface $con = null)
+    {
+        if (!$this->getConfigValue('is_initialized', false)) {
+            $database = new Database($con);
+            $database->insertSql(null, [__DIR__ . "/Config/thelia.sql"]);
+            $this->setConfigValue('is_initialized', true);
+        }
+    }
 }
