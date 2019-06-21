@@ -1,0 +1,82 @@
+{extends file="admin-layout.tpl"}
+
+{block name="after-bootstrap-css"}
+
+{/block}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'module'}
+{/block}
+
+{block name="page-title"}Configuration CommandToUrl{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}CommandToUrl{/block}
+
+{block name="main-content"}
+<div class="row">
+    {form name="command_to_url_configuration_form" type="command_to_url_configuration_form"}
+        <form class="col-md-12" action="{url path="/admin/module/CommandToUrl/save"}" method="post">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">{intl l="Command configuration"}</h4>
+                {include
+                file      = "includes/inner-form-toolbar.html"
+                hide_flags = true
+                hide_save_and_close_button = true
+                }
+            </div>
+            <div class="panel-body">
+                    {form_hidden_fields form=$form}
+                    <table class="table table-striped table-condensed table-left-aligned">
+                        <thead>
+                        <tr>
+                            <th>
+                                {intl l="Command"}
+                            </th>
+                            <th>
+                                {intl l="Token"}
+                            </th>
+                            <th>
+                                {intl l="Allowed ips"}
+                            </th>
+                            <th>
+                                {intl l="Is active"}
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {foreach from=$commands item=command }
+                            <tr>
+                                <td>
+                                    {$command->name}
+                                </td>
+                                <td>
+                                    {form_field form=$form field={$command->name|cat:":-:token"}}
+                                        <input class="form-control" type="text" name="{$name}" value="{$data}"/>
+                                    {/form_field}
+                                </td>
+                                <td>
+                                    {form_field form=$form field={$command->name|cat:":-:allowed_ips"}}
+                                        <input class="form-control" type="text" name="{$name}" value="{$data}"/>
+                                    {/form_field}
+                                </td>
+                                <td>
+                                    {form_field form=$form field={$command->name|cat:":-:active"}}
+                                        <input class="form-control" type="checkbox" name="{$name}" {if $data}checked{/if}/>
+                                    {/form_field}
+                                </td>
+                            </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    {/form}
+</div>
+{/block}
+
+{block name="javascript-initialization"}
+{/block}

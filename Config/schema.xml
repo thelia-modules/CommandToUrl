@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="thelia"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../vendor/propel/propel/resources/xsd/database.xsd" >
+    <table name="command_url"  namespace="CommandToUrl\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER"/>
+        <column name="command" size="255" type="VARCHAR" />
+        <column name="token" size="255" type="VARCHAR"/>
+        <column name="allowed_ips" size="255" type="VARCHAR"/>
+        <column name="active" type="TINYINT"/>
+    </table>
+    <external-schema filename="local/config/schema.xml" referenceOnly="true" />
+</database>
