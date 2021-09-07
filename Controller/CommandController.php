@@ -5,15 +5,24 @@ namespace CommandToUrl\Controller;
 use CommandToUrl\Model\CommandUrlQuery;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\Application;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/command", name="comand_to_url_command")
+ */
 class CommandController extends BaseFrontController
 {
-    public function callCommand(Request $request)
+    /**
+     * @Route("", name="", methods="GET")
+     */
+    public function callCommand(RequestStack $requestStack)
     {
+        $request = $requestStack->getCurrentRequest();
         $command = $request->get('command');
         $token = $request->get('token');
 

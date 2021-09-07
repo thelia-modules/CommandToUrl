@@ -4,13 +4,10 @@
 namespace CommandToUrl\Form;
 
 
+use CommandToUrl\Events\GetAllCommandEvent;
 use CommandToUrl\Model\CommandUrlQuery;
-use CommandToUrl\Service\CommandService;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Kernel;
 use Thelia\Form\BaseForm;
 
 class ConfigurationForm extends BaseForm
@@ -18,7 +15,7 @@ class ConfigurationForm extends BaseForm
     /**
      * @return string the name of you form. This name must be unique
      */
-    public function getName()
+    public static function getName()
     {
         return "command_to_url_configuration_form";
     }
@@ -27,9 +24,11 @@ class ConfigurationForm extends BaseForm
     {
         $form = $this->formBuilder;
 
-        $commands = $this->container->get('command_to_url.command.service')->getAllCommands();
+        $commandsEvent = new GetAllCommandEvent();
 
-        foreach ($commands as $command) {
+        $this->dispatcher->dispatch($commandsEvent, GetAllCommandEvent::GET_ALL_COMMAND);
+
+        foreach ($commandsEvent->getCommands() as $command) {
             $data = CommandUrlQuery::create()
                 ->filterByCommand($command->name)
                 ->findOneOrCreate();
