@@ -20,22 +20,12 @@
         -->
     </commands>
 
-    <services>
-        <service id="command_to_url.command.service" class="CommandToUrl\Service\CommandService">
-            <argument type="service" id="kernel"/>
-        </service>
-        <service id="command_to_url.configuration.form" class="CommandToUrl\Form\ConfigurationForm">
-            <argument type="service" id="command_to_url.command.service"/>
-        </service>
-    </services>
-
-    <!--
     <hooks>
-        <hook id="commandtourl.hook" class="CommandToUrl\Hook\MySuperHook">
-            <tag name="hook.event_listener" event="main.body.bottom" type="front|back|pdf|email" method="onMainBodyBottom" />
+        <hook id="commandtourl.back.hook" class="CommandToUrl\Hook\BackHook">
+            <tag name="hook.event_listener" event="module.configuration" type="back" method="onModuleConfiguration" />
         </hook>
     </hooks>
-    -->
+
 
     <!--
     <exports>

@@ -4,8 +4,8 @@
 namespace CommandToUrl\Controller;
 
 
-use ClassicRide\ClassicRide;
 use CommandToUrl\CommandToUrl;
+use CommandToUrl\Form\ConfigurationForm;
 use CommandToUrl\Model\CommandUrlQuery;
 use CommandToUrl\Service\CommandService;
 use Thelia\Controller\Admin\BaseAdminController;
@@ -14,26 +14,33 @@ use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Translation\Translator;
 use Thelia\Tools\URL;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/admin/module/CommandToUrl", name="comand_to_url_config")
+ */
 class ConfigurationController extends BaseAdminController
 {
-    public function viewAction()
+    /**
+     * @Route("", name="", methods="GET")
+     */
+    public function viewAction(CommandService $commandService)
     {
-        /** @var CommandService $commandService */
-        $commandService = $this->container->get('command_to_url.command.service');
-
         $commands = $commandService->getAllCommands();
 
         return $this->render("command-to-url/configuration", compact('commands'));
     }
 
+    /**
+     * @Route("/save", name="_save", methods="POST")
+     */
     public function saveAction(Request $request)
     {
         if (null !== $response = $this->checkAuth(array(AdminResources::MODULE), 'CommandToUrl', AccessManager::VIEW)) {
             return $response;
         }
 
-        $form = $this->createForm("command_to_url_configuration_form");
+        $form = $this->createForm(ConfigurationForm::getName());
 
         try {
             $data = $this->validateForm($form)->getData();
@@ -71,7 +78,7 @@ class ConfigurationController extends BaseAdminController
                 $form
             );
 
-            return $this->viewAction();
+            return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/module/CommandToUrl"));
         }
         return $this->generateRedirect(URL::getInstance()->absoluteUrl("/admin/module/CommandToUrl"));
     }
